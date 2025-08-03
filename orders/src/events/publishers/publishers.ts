@@ -1,0 +1,33 @@
+import {
+  Publisher,
+  OrderCreatedEvent,
+  OrderCancelledEvent,
+  OrderCompletedEvent,
+} from "@kktickets123/common";
+
+type OrderEvent = OrderCreatedEvent | OrderCancelledEvent | OrderCompletedEvent;
+
+export class Publishers {
+  private static publishers: { [key: string]: Publisher<OrderEvent> } = {};
+  static getPublisher(key: string): Publisher<OrderEvent> {
+    if (!this.publishers[key]) {
+      throw new Error(`Publisher for key ${key} not found`);
+    }
+    return this.publishers[key];
+  }
+  static registerPublisher(
+    key: string,
+    publisher: Publisher<OrderEvent>
+  ): void {
+    if (this.publishers[key]) {
+      throw new Error(`Publisher for key ${key} already exists`);
+    }
+    this.publishers[key] = publisher;
+  }
+
+  static async connect() {
+    await Promise.all(
+      Object.values(this.publishers).map((publisher) => publisher.connect())
+    );
+  }
+}

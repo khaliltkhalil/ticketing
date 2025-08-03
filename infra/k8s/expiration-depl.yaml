@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: expiration-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: expiration
+  template:
+    metadata:
+      labels:
+        app: expiration
+    spec:
+      containers:
+        - name: expiration
+          image: khalilcoder/expiration
+          env:
+            - name: KAFKA_CLIENT_ID
+              value: "ticketing"
+            - name: BROKER_URL
+              value: "kafka-broker-1-srv:9092"
+            - name: REDIS_HOST
+              value: expiration-redis-srv

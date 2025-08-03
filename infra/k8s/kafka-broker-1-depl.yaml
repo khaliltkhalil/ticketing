@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-broker-1-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka-broker-1
+  template:
+    metadata:
+      labels:
+        app: kafka-broker-1
+    spec:
+      containers:
+        - name: kafka-broker-1
+          image: apache/kafka:4.0.0
+          env:
+            - name: KAFKA_PROCESS_ROLES
+              value: "broker"
+            - name: KAFKA_NODE_ID
+              value: "2"
+            - name: KAFKA_CONTROLLER_QUORUM_BOOTSTRAP_SERVERS
+              value: "kafka-controller-1-srv:9093"
+            - name: KAFKA_LISTENERS
+              value: "PLAINTEXT://:9092"
+            - name: KAFKA_ADVERTISED_LISTENERS
+              value: "PLAINTEXT://kafka-broker-1-srv:9092"
+            - name: KAFKA_CONTROLLER_LISTENER_NAMES
+              value: "CONTROLLER"
+            - name: "KAFKA_CONTROLLER_QUORUM_VOTERS"
+              value: "1@kafka-controller-1-srv:9093"
+            - name: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
+              value: "CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,SSL:SSL,SASL_PLAINTEXT:SASL_PLAINTEXT,SASL_SSL:SASL_SSL"
+            - name: KAFKA_NUM_NETWORK_THREADS
+              value: "3"
+            - name: KAFKA_NUM_IO_THREADS
+              value: "8"
+            - name: KAFKA_SOCKET_SEND_BUFFER_BYTES
+              value: "102400"
+            - name: KAFKA_SOCKET_RECEIVE_BUFFER_BYTES
+              value: "102400"
+            - name: KAFKA_SOCKET_REQUEST_MAX_BYTES
+              value: "104857600"
+            - name: KAFKA_LOG_DIRS
+              value: "/tmp/kraft-combined-logs"
+            - name: KAFKA_NUM_PARTITIONS
+              value: "1"
+            - name: KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR
+              value: "1"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-broker-1-srv
+spec:
+  selector:
+    app: kafka-broker-1
+  ports:
+    - name: kafka-broker-1
+      protocol: TCP
+      port: 9092
+      targetPort: 9092
