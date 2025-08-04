@@ -6,11 +6,12 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      STRIPE_KEY: ${{ secrets.STRIPE_KEY }}
     steps:
       - uses: actions/checkout@v2
       - run: cd orders && npm install && npm run test:ci
-        env:
-          STRIPE_KEY: ${{ secrets.STRIPE_KEY }}
+       
      
     
     
