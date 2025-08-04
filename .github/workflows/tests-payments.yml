@@ -9,8 +9,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: cd payments && npm install && npm run test:ci
-      - env:
+        env:
           STRIPE_KEY: ${{ secrets.STRIPE_KEY }}
+      
     
     
   
