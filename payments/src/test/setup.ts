@@ -1,6 +1,6 @@
 import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from "mongoose";
-
+import "dotenv/config";
 jest.mock("../events/publishers/publishers");
 
 let mongo: any;

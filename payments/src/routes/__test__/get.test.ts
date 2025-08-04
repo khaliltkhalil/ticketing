@@ -1,20 +1,34 @@
-// import request from "supertest";
-// import { app } from "../../app";
-// import mongoose, { version } from "mongoose";
-// import { fakeSignup } from "../../test/auth-helper";
-// import { Order } from "../../models/order";
+import request from "supertest";
+import { app } from "../../app";
+import mongoose, { version } from "mongoose";
+import { fakeSignup } from "../../test/auth-helper";
+import { Order } from "../../models/order";
+import { stripe } from "../../stripe";
+import { Payment } from "../../models/payment";
+import { OrderStatus } from "@kktickets123/common";
 
-// it("return 404 if the order does not exist", async () => {
-//   const cookie = await fakeSignup();
-//   await request(app)
-//     .post("/api/payments")
-//     .set("Cookie", cookie)
-//     .send({
-//       orderId: new mongoose.Types.ObjectId().toHexString(),
-//       token: "tok_visa",
-//     })
-//     .expect(404);
-// });
+it("return payment", async () => {
+  const cookie = await fakeSignup();
+  const order = Order.build({
+    id: new mongoose.Types.ObjectId().toHexString(),
+    userId: new mongoose.Types.ObjectId().toHexString(),
+    status: OrderStatus.Created,
+    price: 20,
+    version: 0,
+  });
+  await order.save();
+
+  const payment = Payment.build({
+    paymentIntentId: new mongoose.Types.ObjectId().toHexString(),
+    orderId: order.id,
+  });
+  await payment.save();
+
+  await request(app)
+    .get(`/api/payments?orderId=${order.id}`)
+    .set("Cookie", cookie)
+    .expect(200);
+});
 
 // it("return 401 if the user doesn't own the order", async () => {
 //   const order = new Order({
