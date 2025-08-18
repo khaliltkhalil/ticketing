@@ -8,6 +8,7 @@ import { PaymentCompletePublisher } from "./events/publishers/payment-complete-p
 import { OrderCompletedListener } from "./events/listeners/order-completerd-lisrener";
 
 const start = async () => {
+  console.log("Starting payments service.....");
   try {
     if (!process.env.JWT_KEY) {
       throw new Error("no JWT_KEY");

@@ -6,7 +6,7 @@ import { Payment } from "../models/payment";
 const router = express.Router();
 
 router.get(
-  "/api/payments/",
+  "/api/payments",
   requireAuth,
   async (req: Request, res: Response) => {
     const orderId = req.query.orderId;
@@ -16,10 +16,10 @@ router.get(
     if (!payment) {
       throw new Error("Payment not found");
     }
-    const paymentIntent = await stripe.paymentIntents.retrieve(
-      payment.paymentIntentId
-    );
-    res.send(paymentIntent);
+    // const paymentIntent = await stripe.paymentIntents.retrieve(
+    //   payment.paymentIntentId
+    // );
+    res.send(payment);
   }
 );
 
