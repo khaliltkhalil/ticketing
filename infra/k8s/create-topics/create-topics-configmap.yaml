@@ -1,0 +1,31 @@
+# create-topics-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: create-topics-script
+data:
+  create-topics.sh: |
+    #!/bin/bash
+    KAFKA_BROKERS="${KAFKA_SERVICE_HOST}:${KAFKA_SERVICE_PORT}"
+    TOPICS=("ticket-created" "ticket-updated" "order-created" "order-cancelled" "order-completed" "expiration-complete" "payment-complete")
+    for TOPIC in "${TOPICS[@]}"; do
+      echo "Checking for topic: $TOPIC"
+      mapfile -t EXISTING_TOPICS < <(/opt/bitnami/kafka/bin/kafka-topics.sh --bootstrap-server "$KAFKA_BROKERS" --list)
+      
+      found=false
+
+      for EXISTING_TOPIC in "${EXISTING_TOPICS[@]}"; do
+        if [[ "$EXISTING_TOPIC" == "$TOPIC" ]]; then
+          found=true
+          break
+        fi
+      done
+
+      if "$found"; then
+        echo "'$TOPIC' found in the array."
+      else
+        echo "'$TOPIC' not found in the array."
+        echo "Creating topic: $TOPIC"
+        /opt/bitnami/kafka/bin/kafka-topics.sh --create --topic "$TOPIC" --bootstrap-server "$KAFKA_BROKERS" --partitions 1 --replication-factor 1
+      fi
+    done

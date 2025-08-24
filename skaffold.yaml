@@ -1,9 +1,40 @@
-apiVersion: skaffold/v4beta3
+apiVersion: skaffold/v1
 kind: Config
-manifests:
-  rawYaml:
-    - ./infra/k8s/*
-    - ./infra/k8s/k8s-dev/*
+metadata:
+  name: kafka
+deploy:
+  kubectl:
+    manifests:
+      - ./infra/k8s/kafka/*
+
+---
+apiVersion: skaffold/v1
+kind: Config
+metadata:
+  name: create-topics
+deploy:
+  kubectl:
+    manifests:
+      - ./infra/k8s/create-topics/*
+build:
+  local:
+    push: false
+  artifacts:
+    - image: khalilcoder/create-topics
+      context: topics
+      docker:
+        dockerfile: Dockerfile
+
+---
+apiVersion: skaffold/v1
+kind: Config
+metadata:
+  name: microservices
+deploy:
+  kubectl:
+    manifests:
+      - ./infra/k8s/microservices/*
+      - ./infra/k8s/k8s-ingress-dev/*
 build:
   local:
     push: false

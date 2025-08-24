@@ -28,7 +28,7 @@ const start = async () => {
       clientId: process.env.KAFKA_CLIENT_ID,
       brokers: [process.env.BROKER_URL],
     });
-    // create the publishers
+
     const ticketCreatedPublisher = new TicketCreatedPublisher(kafka);
     const ticketUpdatedPublisher = new TicketUpdatedPublisher(kafka);
 
@@ -36,12 +36,17 @@ const start = async () => {
     Publishers.registerPublisher("ticket-created", ticketCreatedPublisher);
     Publishers.registerPublisher("ticket-updated", ticketUpdatedPublisher);
 
-    await new OrderCreatedListener(kafka, "order-created-service").listen();
-    await new OrderCancelledListener(kafka, "order-cancelled-service").listen();
+    const listeners = [
+      new OrderCreatedListener(kafka, "ticket-service"),
+      new OrderCancelledListener(kafka, "ticket-service1"),
+    ];
 
     // Connect all publishers
     await Publishers.connect();
     console.log("publishers connected");
+
+    await Promise.all(listeners.map((listener) => listener.listen()));
+
     // Start the express app
     app.listen(3000, () => {
       console.log("listening on port 3000!!!");

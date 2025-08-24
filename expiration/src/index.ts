@@ -16,6 +16,7 @@ const start = async () => {
       clientId: process.env.KAFKA_CLIENT_ID,
       brokers: [process.env.BROKER_URL],
     });
+
     // create the publishers
     const expirationCompletePublisher = new ExpirationCompletePublisher(kafka);
 
@@ -26,12 +27,15 @@ const start = async () => {
       expirationCompletePublisher
     );
 
+    const listeners = [new OrderCreatedListener(kafka, "expiration-srv")];
+
     // Connect all publishers
     await Publishers.connect();
     console.log("publishers connected");
+    // Register the listener
 
-    await new OrderCreatedListener(kafka, "expiration-srv").listen();
-    console.log("OrderCreatedListener is listening for events");
+    await Promise.all(listeners.map((listener) => listener.listen()));
+    console.log("Listeners are listening for events");
   } catch (err) {
     console.log(err);
   }

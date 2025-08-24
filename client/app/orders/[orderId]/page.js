@@ -30,8 +30,6 @@ const OrderShow = async ({ params }) => {
         status={order.status}
         options={options}
       />
-      {/* {order.status !== status.Cancelled &&
-        order.status !== status.Complete && <Checkout options={options} />} */}
     </div>
   );
 };

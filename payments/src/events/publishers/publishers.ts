@@ -21,6 +21,9 @@ export class Publishers {
     }
     this.publishers[key] = publisher;
   }
+  static getAllTopics(): string[] {
+    return Object.values(this.publishers).map((publisher) => publisher.topic);
+  }
 
   static async connect() {
     await Promise.all(

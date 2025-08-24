@@ -8,7 +8,6 @@ import Header from "../components/header";
 async function RootLayout({ children }) {
   const headersList = await headers();
   const customAxios = createCustomAxios(headersList);
-
   const { data } = await customAxios.get("/api/users/currentuser");
 
   return (
@@ -16,7 +15,6 @@ async function RootLayout({ children }) {
       <body>
         <AuthProvider initialCurrentUser={data.currentUser}>
           <Header />
-
           <div className="container">{children}</div>
         </AuthProvider>
       </body>

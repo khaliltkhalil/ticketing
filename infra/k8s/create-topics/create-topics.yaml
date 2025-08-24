@@ -1,0 +1,28 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: creating-topics-job
+spec:
+  template:
+    spec:
+      volumes:
+        - name: create-topics-script
+          configMap:
+            name: create-topics-script
+            defaultMode: 0755
+
+      containers:
+        - name: creating-topics
+          image: khalilcoder/create-topics # An image with Kafka CLI tools
+          env:
+            - name: KAFKA_SERVICE_HOST
+              value: "kafka-broker-1-srv" # Replace with your Kafka service name
+            - name: KAFKA_SERVICE_PORT
+              value: "9092"
+          volumeMounts:
+            - name: create-topics-script
+              mountPath: /opt/scripts
+      restartPolicy: Never
+  backoffLimit: 4 # Optional: Number of retries before marking Job as failed
+  ttlSecondsAfterFinished: 30 # Optional: Delete the Job and its Pods 30 seconds after completion
+

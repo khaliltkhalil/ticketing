@@ -34,6 +34,7 @@ const start = async () => {
       clientId: process.env.KAFKA_CLIENT_ID,
       brokers: [process.env.BROKER_URL],
     });
+
     //create the publishers
     const orderCreatedPublisher = new OrderCreatedPublisher(kafka);
     const orderCancelledPublisher = new OrderCancelledPublisher(kafka);
@@ -44,16 +45,20 @@ const start = async () => {
     Publishers.registerPublisher("order-cancelled", orderCancelledPublisher);
     Publishers.registerPublisher("order-completed", orderCompletedPublisher);
 
+    const listeners = [
+      new TicketCreatedListener(kafka, "orders-service1"),
+      new TicketUpdatedListener(kafka, "orders-service2"),
+      new ExpirationCompleteListener(kafka, "orders-service3"),
+      new PaymentCompleteListener(kafka, "orders-service4"),
+    ];
+
     // Connect all publishers
     await Publishers.connect();
     console.log("publishers connected");
 
-    await new TicketCreatedListener(kafka, "orders-service1").listen();
-    await new TicketUpdatedListener(kafka, "orders-service2").listen();
+    await Promise.all(listeners.map((listener) => listener.listen()));
+    console.log("All listeners are listening for events");
 
-    await new ExpirationCompleteListener(kafka, "orders-service3").listen();
-
-    await new PaymentCompleteListener(kafka, "orders-service4").listen();
     // Start the express app
     app.listen(3000, () => {
       console.log("listening on port 3000!!!");
