@@ -24,5 +24,4 @@ make sure to name the role
 
 ![alt text](image-3.png)
 
-[![Watch the video](https://img.youtube.com/vi/c9liExstdRI/0.jpg)]
-(https://www.youtube.com/watch?v=c9liExstdRI)
+[![Watch the video](https://img.youtube.com/vi/c9liExstdRI/0.jpg)](https://www.youtube.com/watch?v=c9liExstdRI)
