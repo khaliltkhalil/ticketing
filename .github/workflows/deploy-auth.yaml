@@ -1,0 +1,21 @@
+name: deploy-auth
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'auth/**'
+jobs:
+  deploy:
+    runs-on: ubunto-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: cd auth && docker build -t khalilcoder/auth .
+      - run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+        env: 
+          DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
+          DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+      - run: docker push khalilcoder/auth
+      
+      
+    
