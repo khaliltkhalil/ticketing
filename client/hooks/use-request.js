@@ -9,7 +9,9 @@ const useRequest = ({ url, method, body, onSuccess }) => {
     setErrors(null);
     setLoading(true);
     try {
-      const response = await axios[method](url, body);
+      const response = await axios[method](url, body, {
+        withCredentials: true,
+      });
       if (onSuccess) {
         console.log(response.data);
         onSuccess(response.data);
