@@ -1,5 +1,5 @@
 #!/bin/bash
-echo "deploying kafka..."
+echo "deploying kafka...."
 kubectl apply -f kafka &
 sleep 10
 echo "deploying create-topics job"

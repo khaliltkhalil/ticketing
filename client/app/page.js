@@ -30,7 +30,6 @@ const Page = async () => {
             <th>Price $</th>
             <th>Link</th>
           </tr>
-          git
         </thead>
         <tbody>
           {ticketList.length > 0 ? (
