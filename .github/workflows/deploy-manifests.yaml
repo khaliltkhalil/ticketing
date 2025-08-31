@@ -1,0 +1,25 @@
+name: deploy-manifests
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'infra/**'
+env: 
+    AWS_REGION: us-east-2
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+      - run: aws eks --region $AWS_REGION update-kubeconfig --name ticketing
+      - run: bash ./deploy.sh
+        
+      
+      
+    
