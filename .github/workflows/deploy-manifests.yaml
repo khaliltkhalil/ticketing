@@ -18,7 +18,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
       - run: aws eks --region $AWS_REGION update-kubeconfig --name ticketing
-      - run: bash ./infra/k8s/deploy.sh
+      - run: cd ./infra/k8s && bash ./deploy.sh
         
       
       
