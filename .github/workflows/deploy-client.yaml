@@ -14,16 +14,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: cd auth && docker build -t khalilcoder/auth .
+      - run: cd client && docker build -t khalilcoder/client .
       - run: echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USERNAME --password-stdin
-      - run: docker push khalilcoder/auth
+      - run: docker push khalilcoder/client
       - uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
       - run: aws eks --region $AWS_REGION update-kubeconfig --name ticketing
-      - run: kubectl rollout restart deployment auth-depl
+      - run: kubectl rollout restart deployment client-depl
         
       
       
