@@ -28,7 +28,7 @@ const CheckoutForm = () => {
       //`Elements` instance that was used to create the Payment Element
       elements,
       confirmParams: {
-        return_url: "http://ticketing.dev/paymentStatus",
+        return_url: "https://ticketing-app.com/paymentStatus",
       },
     });
 
