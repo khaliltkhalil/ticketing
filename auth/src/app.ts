@@ -7,9 +7,11 @@ import { signupRouter } from "./routes/signup";
 import { signoutRouter } from "./routes/signout";
 import { errorHandling, NotFoundError } from "@kktickets123/common";
 import cookieSession from "cookie-session";
+import cors from "cors";
 
 const app = express();
 app.set("trust proxy", true);
+app.use(cors());
 app.use(json());
 app.use(
   cookieSession({
