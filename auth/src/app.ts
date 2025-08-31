@@ -11,7 +11,11 @@ import cors from "cors";
 
 const app = express();
 app.set("trust proxy", true);
-app.use(cors());
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 app.use(json());
 app.use(
   cookieSession({
