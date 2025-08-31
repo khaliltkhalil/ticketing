@@ -1,6 +1,7 @@
 #!/bin/bash
-echo "deplying kafka"
-kubectl apply -f ./kafka &
+echo "deploying kafka..."
+kubectl version 
+kubectl apply -f kafka &
 sleep 10
 echo "deploying create-topics job"
 kubectl apply -f ./create-topics &
