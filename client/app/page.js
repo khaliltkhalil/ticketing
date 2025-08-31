@@ -27,7 +27,7 @@ const Page = async () => {
         <thead>
           <tr>
             <th>Title</th>
-            <th>Price</th>
+            <th>Price $</th>
             <th>Link</th>
           </tr>
         </thead>
