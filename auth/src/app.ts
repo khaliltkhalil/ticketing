@@ -10,15 +10,21 @@ import cookieSession from "cookie-session";
 import cors from "cors";
 
 const app = express();
-app.set("trust proxy", true);
+app.enable("trust proxy");
+// app.set("trust proxy", true);
 app.use(cors());
 app.use(json());
 app.use(
   cookieSession({
     signed: false,
-    secure: false,
+    secure: true,
   })
 );
+
+app.use((req, res, next) => {
+  console.log("Request Headers:", JSON.stringify(req.headers));
+  next();
+});
 
 app.use(currentUserRouter);
 app.use(signinRouter);
