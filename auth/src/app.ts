@@ -18,11 +18,6 @@ app.use(
   })
 );
 
-app.use((req, res, next) => {
-  console.log("Request Headers:", JSON.stringify(req.headers));
-  next();
-});
-
 app.use(currentUserRouter);
 app.use(signinRouter);
 app.use(signupRouter);
