@@ -1,0 +1,30 @@
+name: deploy-tickets
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'tickets/**'
+env: 
+    AWS_REGION: us-east-2
+    DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
+    DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: cd tickets && docker build -t khalilcoder/tickets .
+      - run: echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USERNAME --password-stdin
+      - run: docker push khalilcoder/tickets
+      - uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+      - run: aws eks --region $AWS_REGION update-kubeconfig --name ticketing
+      - run: kubectl rollout restart deployment tickets-depl
+        
+      
+      
+    
